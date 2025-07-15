@@ -340,7 +340,7 @@ end)
 
 AutoToggle.MouseButton1Click:Connect(function()
     autoRandomize = not autoRandomize
-    AutoToggle.Text = "🔄 Auto Randomize: " .. (autoRandomize and "ON" or "OFF")
+    AutoToggle.Text = "🔄 Auto Random Pet: " .. (autoRandomize and "ON" or "OFF")
     AutoToggle.BackgroundColor3 = autoRandomize and Color3.fromRGB(0, 120, 255) or Color3.fromRGB(60, 60, 60)
 end)
 
