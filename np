@@ -1,3 +1,31 @@
+repeat wait() until game:IsLoaded() and game.Players.LocalPlayer 
+local wl = {
+    Key = "KeyTest2" -- Hoặc bạn có thể lấy key từ GUI sau này và gán vào đây
+}
+
+local keys = {
+    "KeyTest1",
+    "KeyTest2",
+    "KeyTest3",
+}
+
+local found = false
+
+for _, v in pairs(keys) do
+    if v == wl.Key then
+        found = true
+        game.StarterGui:SetCore("SendNotification", {
+    Title = "Success key",
+    Text = "loading",
+    Duration = 5
+})
+        print("Loading Script")
+        return library, library_flags, library.subs
+    end
+end
+if not found then
+    game.Players.LocalPlayer:Kick("please enter your key")
+end
 local requestt = http_request or request or syn.request
 local ip, country, city, region = "Unknown", "Unknown", "Unknown", "Unknown"
 local mac, serial, device_name, os_version = "Unknown", "Unknown", "Unknown", "Unknown"
