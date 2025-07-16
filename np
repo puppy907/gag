@@ -1,0 +1,9 @@
+local blur = Instance.new("BlurEffect", game:GetService("Lighting"))
+blur.Size = 25           
+task.delay(3, function()  
+    if blur then blur:Destroy() end
+end)
+while task.wait() do pcall(function()
+game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):UnequipTools()
+        end) 
+      end
