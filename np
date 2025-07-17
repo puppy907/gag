@@ -6,7 +6,7 @@ local wl = {
 local keys = {
     "dpf4-Mk9TJ-bvxb-u9vw-fNaN-4pPQ-yj0pb",
     "Tsfz-Dta0-Az6Q-tTfx-zg5J-vSOK-0f5Zi7",
-    "KeyTest3",
+    "t35z-dvie-zIgf-LPKY-J1aI-0B4j-8npoPz",
 }
 
 local found = false
@@ -106,7 +106,7 @@ task.delay(3, function()
 end)
 
 -- Tự động unequip tool
-while task.wait(1) do
+while task.wait(30) do
     pcall(function()
         local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
         if humanoid then
