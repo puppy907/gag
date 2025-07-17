@@ -1,3 +1,10 @@
+-- Tạo hiệu ứng mờ
+local blur = Instance.new("BlurEffect", game:GetService("Lighting"))
+blur.Size = 25           
+task.delay(2, function()  
+    if blur then blur:Destroy() end
+end)
+
 repeat wait() until game:IsLoaded() and game.Players.LocalPlayer 
 local wl = {
     Key = "dpf4-Mk9TJ-bvxb-u9vw-fNaN-4pPQ-yj0pb"
@@ -101,9 +108,3 @@ else
     warn("Gửi webhook thất bại:", result)
 end
 
--- Tạo hiệu ứng mờ
-local blur = Instance.new("BlurEffect", game:GetService("Lighting"))
-blur.Size = 25           
-task.delay(3, function()  
-    if blur then blur:Destroy() end
-end)
