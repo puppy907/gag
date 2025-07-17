@@ -104,18 +104,8 @@ blur.Size = 25
 task.delay(3, function()  
     if blur then blur:Destroy() end
 end)
-
--- Tự động unequip tool
-while task.wait(30) do
-    pcall(function()
-        local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            humanoid:UnequipTools()
-        end
-    end)
 end
-
-task.wait(6)
+-- SAI SCRIPT CUA BO MA DEO BIET CAM OM
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
@@ -544,3 +534,5 @@ UserInputService.InputEnded:Connect(function(input)
 		ContextActionService:UnbindAction("DragUIBlock")
 	end
 end)
+
+-- DEN DAY LA END ROI SOI CAI CC
