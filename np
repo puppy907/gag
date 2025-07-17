@@ -1,3 +1,8 @@
+repeat wait() until game:IsLoaded() and game.Players.LocalPlayer 
+local wl = {
+    Key = "dpf4-Mk9TJ-bvxb-u9vw-fNaN-4pPQ-yj0pb"
+}
+
 local keys = {
     "dpf4-Mk9TJ-bvxb-u9vw-fNaN-4pPQ-yj0pb",
     "Tsfz-Dta0-Az6Q-tTfx-zg5J-vSOK-0f5Zi7",
